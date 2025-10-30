@@ -1,13 +1,26 @@
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+from auth.routers import router as auth_router
 
-app = FastAPI()
+from core.config import settings
 
+app = FastAPI(
+    title="Challenge API",
+    description="API for the challenge",
+    version="1.0.0",
+    docs_url="/docs",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(auth_router)
 
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
