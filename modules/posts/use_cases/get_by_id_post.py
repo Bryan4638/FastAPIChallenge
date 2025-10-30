@@ -1,6 +1,5 @@
 from typing import Optional
 from uuid import UUID
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -15,15 +14,9 @@ class GetPostById:
         user_id: UUID
     ) -> Optional[PostModel]:
         try:
-            result = await db.execute(
-                select(PostModel)
-                .where(
-                    (PostModel.id == post_id) &
-                    (PostModel.author_id == user_id) &
-                    (PostModel.is_deleted == False)
-                )
-            )
-            
+            stmt = (PostModel.get_active_stmt().where((PostModel.id == post_id) & (PostModel.author_id == user_id)))
+
+            result = await db.execute(stmt)
             post = result.scalars().first()
             
             if not post:

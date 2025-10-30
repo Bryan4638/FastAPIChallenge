@@ -38,6 +38,9 @@ async def update_post_service(
 
     post = await UpdatePost.update_post(db, post_id, user_id, update_data)
 
+    if not post:
+        raise ValueError("Post not found")
+
     return PostResponseDTO(
         id=post.id,
         title=post.title,

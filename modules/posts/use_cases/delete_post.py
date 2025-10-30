@@ -1,9 +1,7 @@
 from uuid import UUID
-from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 
-from modules.posts.model.model import PostModel
 from modules.posts.use_cases.get_by_id_post import GetPostById
 
 
@@ -20,13 +18,9 @@ class DeletePost:
             if not post:
                 return False
 
-            await db.execute(
-                update(PostModel)
-                .where(PostModel.id == post_id)
-                .values(is_deleted=True)
-            )
+            post.soft_delete()
             await db.commit()
-            
+
             return True
             
         except SQLAlchemyError as e:

@@ -1,12 +1,13 @@
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy import update, select
+from sqlalchemy import update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from modules.posts.dto.update_post import UpdatePostDTO
 from modules.posts.model.model import PostModel
+from modules.posts.use_cases.get_by_id_post import GetPostById
 
 
 class UpdatePost:
@@ -20,16 +21,12 @@ class UpdatePost:
     ) -> Optional[PostModel]:
 
         try:
-            query = (select(PostModel)
-                     .where(
-                PostModel.id == post_id,
-                PostModel.author_id == user_id,
-                PostModel.is_deleted == False)
-            )
-            result = await db.execute(query)
-            post = result.scalar_one_or_none()
+            post = await GetPostById.get_post_by_id(db, post_id, user_id)
 
             if not post:
+                return None
+
+            if not user_id.__eq__(post.author_id):
                 return None
 
             update_values = {}

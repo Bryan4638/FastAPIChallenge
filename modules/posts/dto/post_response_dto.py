@@ -9,4 +9,3 @@ class PostResponseDTO(BaseModel):
     created_at: datetime = Field(..., description="When the post was created")
     updated_at: datetime = Field(..., description="When the post was last updated")
 
-
