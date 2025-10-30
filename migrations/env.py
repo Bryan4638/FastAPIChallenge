@@ -8,8 +8,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from auth.model import Base
-from auth.model import UserModel
+from core.database import Base
+
+from modules.posts.model.model import PostModel
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 

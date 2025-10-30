@@ -35,9 +35,9 @@ def get_password_hash(password: str) -> str:
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
 
-    expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    """expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire})"""
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
 
     return encoded_jwt
@@ -45,6 +45,7 @@ def create_access_token(data: dict) -> str:
 def decode_token(token: Annotated[str, Depends(oauth2_scheme)]) -> dict:
     try:
         decoded_jwt = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
+
         return decoded_jwt
     except Exception:
         raise HTTPException(

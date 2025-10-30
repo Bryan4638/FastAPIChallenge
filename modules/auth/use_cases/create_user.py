@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import uuid4
 from datetime import datetime
 
-from auth.DTO.register_dto import RegisterDTO
-from auth.model import UserModel
-from auth.utils.helper import get_password_hash
+from modules.auth.dto.register_dto import RegisterDTO
+from modules.auth.model.model import UserModel
+from modules.auth.utils.helper import get_password_hash
 
 
 class CreateUser:

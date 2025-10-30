@@ -1,11 +1,11 @@
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from auth.DTO.auth_response_dto import AuthResponseDTO, UserResponse
-from auth.DTO.register_dto import RegisterDTO
-from auth.use_cases.create_user import CreateUser
-from auth.use_cases.find_user import get_by_username
-from auth.utils.helper import verify_password, create_access_token
+from modules.auth.dto.auth_response_dto import AuthResponseDTO, UserResponse
+from modules.auth.dto.register_dto import RegisterDTO
+from modules.auth.use_cases.create_user import CreateUser
+from modules.auth.use_cases.find_user import FindUser
+from modules.auth.utils.helper import verify_password, create_access_token
 
 
 async def authenticate_user(db: AsyncSession,
@@ -13,7 +13,7 @@ async def authenticate_user(db: AsyncSession,
         password: str
 ) -> Optional[AuthResponseDTO]:
 
-    user = await get_by_username(db=db, username=username)
+    user = await FindUser.get_by_username(db=db, username=username)
 
     if not user:
         return None
@@ -41,7 +41,7 @@ async def authenticate_user(db: AsyncSession,
 
 async def register_user(db: AsyncSession, user_data: RegisterDTO) -> UserResponse:
 
-    existing_user = await get_by_username(db=db, username=user_data.username)
+    existing_user = await FindUser.get_by_username(db=db, username=user_data.username)
 
     if existing_user:
         raise ValueError("The username is already registered")
