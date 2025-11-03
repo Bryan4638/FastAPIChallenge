@@ -1,13 +1,13 @@
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy import update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from modules.posts.dto.update_post import UpdatePostDTO
 from modules.posts.model.model import PostModel
 from modules.posts.use_cases.get_by_id_post import GetPostById
+from modules.posts.use_cases.get_tags_by_id import get_tags_by_id
 
 
 class UpdatePost:
@@ -23,27 +23,26 @@ class UpdatePost:
         try:
             post = await GetPostById.get_post_by_id(db, post_id, user_id)
 
+            tags = await get_tags_by_id(db, update_data.tag_ids)
+
             if not post:
                 return None
 
             if not user_id.__eq__(post.author_id):
                 return None
 
-            update_values = {}
             if update_data.title is not None:
-                update_values['title'] = update_data.title
+                post.title = update_data.title
             if update_data.content is not None:
-                update_values['content'] = update_data.content
+                post.content = update_data.content
+            if update_data.tag_ids is not None:
+                post.tags = tags
 
-            if not update_values:
+            if not any([update_data.title, update_data.content, update_data.tag_ids is not None]):
                 return None
 
-            await db.execute(
-                update(PostModel)
-                .where(PostModel.id == post_id)
-                .values(**update_values)
-            )
 
+            db.add(post)
             await db.commit()
             await db.refresh(post)
 

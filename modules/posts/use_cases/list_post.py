@@ -1,6 +1,7 @@
 from typing import List
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from modules.posts.model.model import PostModel
 
@@ -14,13 +15,16 @@ class ListPosts:
         page_size: int = 10
     ) -> List[PostModel]:
         try:
-
             skip = (page - 1) * page_size
 
-            stmt = PostModel.get_active_stmt().offset(skip).limit(page_size).order_by(PostModel.created_at.desc())
+            stmt = (PostModel.
+                    get_active_stmt()
+                    .options(selectinload(PostModel.tags))
+                    .offset(skip)
+                    .limit(page_size)
+                    .order_by(PostModel.created_at.desc()))
 
             result = await db.execute(stmt)
-
             posts = result.scalars().all()
 
             return [

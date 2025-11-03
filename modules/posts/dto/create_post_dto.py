@@ -1,9 +1,13 @@
+from typing import Optional, List
+from uuid import UUID
+
 from pydantic import BaseModel, Field, field_validator
 
 
 class CreatePostDTO(BaseModel):
     title: str = Field(..., min_length=5, max_length=200, description="Title of the post (5-200 characters)")
     content: str = Field(..., min_length=5, description="Main content of the post (minimum 5 characters)")
+    tag_ids: Optional[List[UUID]] = Field(None, description="List of tag IDs associated with the post")
 
     @field_validator('title')
     def validate_title(cls, v):

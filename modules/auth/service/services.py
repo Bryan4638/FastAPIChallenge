@@ -5,7 +5,7 @@ from modules.auth.dto.auth_response_dto import AuthResponseDTO, UserResponse
 from modules.auth.dto.register_dto import RegisterDTO
 from modules.auth.use_cases.create_user import CreateUser
 from modules.auth.use_cases.find_user import FindUser
-from modules.auth.utils.helper import verify_password, create_access_token
+from core.security import verify_password, create_access_token
 
 
 async def authenticate_user(db: AsyncSession,

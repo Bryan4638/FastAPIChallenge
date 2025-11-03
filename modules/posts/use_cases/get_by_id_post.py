@@ -2,6 +2,7 @@ from typing import Optional
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import selectinload
 
 from modules.posts.model.model import PostModel
 
@@ -14,7 +15,10 @@ class GetPostById:
         user_id: UUID
     ) -> Optional[PostModel]:
         try:
-            stmt = (PostModel.get_active_stmt().where((PostModel.id == post_id) & (PostModel.author_id == user_id)))
+            stmt = (PostModel.
+                    get_active_stmt()
+                    .options(selectinload(PostModel.tags))
+                    .where((PostModel.id == post_id) & (PostModel.author_id == user_id)))
 
             result = await db.execute(stmt)
             post = result.scalars().first()

@@ -11,6 +11,7 @@ from alembic import context
 from core.database import Base
 
 from modules.posts.model.model import PostModel
+from modules.posts.model.model import TagModel
 from modules.auth.model.model import UserModel
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))

@@ -5,7 +5,7 @@ from datetime import datetime
 
 from modules.auth.dto.register_dto import RegisterDTO
 from modules.auth.model.model import UserModel
-from modules.auth.utils.helper import get_password_hash
+from core.security import get_password_hash
 
 
 class CreateUser:

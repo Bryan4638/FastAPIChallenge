@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from core.config import settings
 from core.database import get_session
-from modules.auth.utils.helper import decode_token
+from core.security import decode_token
 from modules.posts.dto.create_post_dto import CreatePostDTO
 from modules.posts.dto.post_response_dto import PostResponseDTO
 from modules.posts.dto.update_post import UpdatePostDTO
@@ -27,7 +27,6 @@ router = APIRouter(
 
 
 @router.get("/",
-    response_model=List[PostResponseDTO],
     status_code=status.HTTP_201_CREATED,
     summary="List post",
     description="List a post for the authenticated user"
@@ -40,7 +39,9 @@ async def get_posts(
 ):
     try:
 
-        return await list_post_service(db, user.get("user_id"), page, page_size)
+        result = await list_post_service(db, user.get("user_id"), page, page_size)
+        [print(post.tags) for post in result]
+        return result
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 

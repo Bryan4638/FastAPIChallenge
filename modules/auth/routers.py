@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from modules.auth.dto.auth_response_dto import AuthResponseDTO, RegisterResponseDTO
+from modules.auth.dto.auth_response_dto import AuthResponseDTO
 from modules.auth.dto.register_dto import RegisterDTO
 from modules.auth.service.services import register_user, authenticate_user
 from core.config import settings

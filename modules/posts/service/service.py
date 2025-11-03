@@ -25,6 +25,7 @@ async def create_post_service(
         id=post.id,
         title=post.title,
         content=post.content,
+        tags=post.tags,
         created_at=post.created_at,
         updated_at=post.updated_at
     )
@@ -45,6 +46,7 @@ async def update_post_service(
         id=post.id,
         title=post.title,
         content=post.content,
+        tags=post.tags,
         created_at=post.created_at,
         updated_at=post.updated_at
     )
@@ -74,6 +76,7 @@ async def get_post_by_id_service(
         id=post.id,
         title=post.title,
         content=post.content,
+        tags=post.tags,
         created_at=post.created_at,
         updated_at=post.updated_at
     )
@@ -93,6 +96,7 @@ async def list_post_service(
             title=post.title,
             content=post.content,
             created_at=post.created_at,
+            tags=post.tags,
             updated_at=post.updated_at
         )
         for post in posts
