@@ -48,9 +48,6 @@ async def update_post_service(
 
     tags = await get_tags_by_id(db, update_data.tag_ids)
 
-    if not tags:
-        raise ValueError("Tags not found")
-
     if not post:
         return None
 

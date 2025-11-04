@@ -12,4 +12,9 @@ async def get_tags_by_id(db: AsyncSession, tag_ids: list[UUID]):
 
     query = select(TagModel).where(TagModel.id.in_(tag_ids))
     result = await db.execute(query)
-    return result.scalars().all()
+    tags =  result.scalars().all()
+
+    if not tags:
+        raise ValueError("Tags not found")
+
+    return tags
