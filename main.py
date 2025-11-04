@@ -3,6 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 from modules.auth.routers import router as auth_router
 from modules.posts.routers import router as post_router
 from modules.comment.routes import router as comment_router
+from modules.user.routers import router as user_router
 
 from core.config import settings
 
@@ -22,6 +23,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(user_router)
 app.include_router(post_router)
 app.include_router(comment_router)
 

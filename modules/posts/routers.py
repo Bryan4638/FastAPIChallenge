@@ -58,7 +58,7 @@ async def get_post_by_id(
         db: AsyncSession = Depends(get_session)
 ):
     try:
-        return await get_post_by_id_service(db, post_id, user.get("user_id"))
+        return await get_post_by_id_service(db, post_id)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 

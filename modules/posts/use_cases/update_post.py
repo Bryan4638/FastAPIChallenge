@@ -1,13 +1,11 @@
-from typing import Optional
-from uuid import UUID
+from typing import Optional, List
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from modules.posts.dto.update_post import UpdatePostDTO
-from modules.posts.model.model import PostModel
-from modules.posts.use_cases.get_by_id_post import GetPostById
-from modules.posts.use_cases.get_tags_by_id import get_tags_by_id
+from modules.posts.model.model import PostModel, TagModel
+
 
 
 class UpdatePost:
@@ -15,21 +13,12 @@ class UpdatePost:
     async def update_post(
         cls,
         db: AsyncSession,
-        post_id: UUID,
-        user_id: UUID,
+        post: PostModel,
+        tags: List[TagModel],
         update_data: UpdatePostDTO
     ) -> Optional[PostModel]:
 
         try:
-            post = await GetPostById.get_post_by_id(db, post_id, user_id)
-
-            tags = await get_tags_by_id(db, update_data.tag_ids)
-
-            if not post:
-                return None
-
-            if not user_id.__eq__(post.author_id):
-                return None
 
             if update_data.title is not None:
                 post.title = update_data.title

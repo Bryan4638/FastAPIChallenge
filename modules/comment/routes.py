@@ -62,7 +62,7 @@ async def update_comment(
     summary="Delete comment",
     description="Delete a comment for the authenticated user"
 )
-async def delete_post(
+async def delete_comment(
         comment_id: UUID,
         user: Annotated[dict, Depends(decode_token)],
         db: AsyncSession = Depends(get_session)
@@ -72,6 +72,6 @@ async def delete_post(
         if not is_deleted:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Comment not found")
 
-        return {"message": "Post deleted successfully", "id":comment_id}
+        return {"message": "Comment deleted successfully", "id":comment_id}
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

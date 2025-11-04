@@ -18,7 +18,7 @@ class DeleteComment:
             if not comment:
                 return False
 
-            if not user_id.__eq__(comment.author_id):
+            if user_id != comment.author_id:
                 raise ValueError(f"User {user_id} is not the author of comment {comment_id}")
 
             comment.soft_delete()

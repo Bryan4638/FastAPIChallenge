@@ -1,23 +1,21 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import uuid4
 
 from modules.posts.dto.create_post_dto import CreatePostDTO
-from modules.posts.model.model import PostModel
-from modules.posts.use_cases.get_tags_by_id import get_tags_by_id
+from modules.posts.model.model import PostModel, TagModel
 
 
 class CreatePost:
     @staticmethod
     async def create_post(db: AsyncSession,
         post_data: CreatePostDTO,
-        user_id: str
+        user_id: str,
+        tags: List[TagModel]
 ) -> Optional[PostModel]:
         try:
-
-            tags = await get_tags_by_id(db, post_data.tag_ids)
 
             new_post = PostModel(
                 id=uuid4(),

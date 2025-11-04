@@ -12,17 +12,19 @@ class GetPostById:
     async def get_post_by_id(
         db: AsyncSession,
         post_id: UUID,
-        user_id: UUID
     ) -> Optional[PostModel]:
         try:
             stmt = (PostModel.
                     get_active_stmt()
-                    .options(selectinload(PostModel.tags))
-                    .where((PostModel.id == post_id) & (PostModel.author_id == user_id)))
+                    .options(
+                        selectinload(PostModel.tags),
+                        selectinload(PostModel.comments)
+                    )
+                    .where((PostModel.id == post_id)))
 
             result = await db.execute(stmt)
             post = result.scalars().first()
-            
+
             if not post:
                 return None
                 

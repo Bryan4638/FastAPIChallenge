@@ -1,22 +1,16 @@
-from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 
-from modules.posts.use_cases.get_by_id_post import GetPostById
+from modules.posts.model.model import PostModel
 
 
 class DeletePost:
     @staticmethod
     async def delete_post(
         db: AsyncSession,
-        post_id: UUID,
-        user_id: UUID
+        post: PostModel
     ) -> bool:
         try:
-            post = await GetPostById.get_post_by_id(db, post_id, user_id)
-
-            if not post:
-                return False
 
             post.soft_delete()
             await db.commit()

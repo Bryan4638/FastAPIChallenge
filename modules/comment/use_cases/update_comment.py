@@ -26,8 +26,8 @@ class UpdateComment:
             if not comment:
                 return None
 
-            if not user_id.__eq__(comment.author_id):
-                return None
+            if  user_id != comment.author_id:
+                raise ValueError(f"User {user_id} is not the author of comment {comment_id}")
 
             update_values = {}
             if update_data.content is not None:
