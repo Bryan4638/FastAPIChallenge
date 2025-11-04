@@ -46,7 +46,7 @@ async def update_post_service(
     if not post:
         return None
 
-    if user_id != post.author_id:
+    if str(user_id) != str(post.author_id):
         raise ValueError(f"User {user_id} is not the author of Post {post_id}")
 
     post_updated = await UpdatePost.update_post(db, post, tags, update_data)
@@ -75,7 +75,7 @@ async def delete_post_service(
     if not post:
         return False
 
-    if user_id != post.author_id:
+    if str(user_id) != str(post.author_id):
         raise ValueError(f"User {user_id} is not the author of Post {post_id}")
 
     is_delete = await DeletePost.delete_post(db, post)

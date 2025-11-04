@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from modules.comment.dto.request_comment_dto import RequestCommentDTO
 from modules.comment.model.model import CommentModel
-from modules.comment.use_cases.find_by_id import FindCommentById
 
 
 class UpdateComment:
@@ -17,17 +16,11 @@ class UpdateComment:
         db: AsyncSession,
         comment_id: UUID,
         user_id: UUID,
+        comment: CommentModel,
         update_data: RequestCommentDTO
     ) -> Optional[CommentModel]:
 
         try:
-            comment = await FindCommentById.find_by_id(db, comment_id)
-
-            if not comment:
-                return None
-
-            if  user_id != comment.author_id:
-                raise ValueError(f"User {user_id} is not the author of comment {comment_id}")
 
             update_values = {}
             if update_data.content is not None:
