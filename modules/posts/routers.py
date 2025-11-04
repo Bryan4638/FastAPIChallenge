@@ -1,8 +1,8 @@
-from typing import Annotated, Optional
+from typing import Annotated, Optional, List
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 
 from core.config import settings
 from core.database import get_session
@@ -10,13 +10,7 @@ from core.security import decode_token
 from modules.posts.dto.create_post_dto import CreatePostDTO
 from modules.posts.dto.post_response_dto import PostResponseDTO
 from modules.posts.dto.update_post import UpdatePostDTO
-from modules.posts.service.service import (
-    create_post_service,
-    update_post_service,
-    delete_post_service,
-    list_post_service,
-    get_post_by_id_service
-)
+from modules.posts.service.service import (create_post_service, update_post_service, delete_post_service, list_post_service, get_post_by_id_service, list_tags_service)
 
 # Router
 router = APIRouter(
@@ -24,6 +18,20 @@ router = APIRouter(
     tags=["post"],
     responses={404: {"description": "Not found"}},
 )
+
+@router.get("/tags",
+    status_code=status.HTTP_201_CREATED,
+    summary="List tags",
+    description="List a tags for the authenticated user"
+)
+async def get_tags(
+        user: Annotated[dict, Depends(decode_token)],
+        db: AsyncSession = Depends(get_session)
+):
+    try:
+        return await list_tags_service(db)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.get("/",
@@ -33,13 +41,14 @@ router = APIRouter(
 )
 async def get_posts(
         user: Annotated[dict, Depends(decode_token)],
+        search: Optional[str] = Query(None, description="Search term for filtering posts"),
+        tags: Optional[List[str]] = Query(None, description="Tags for filtering posts"),
         page: int = 1,
         page_size: int = 10,
         db: AsyncSession = Depends(get_session)
 ):
     try:
-
-        result = await list_post_service(db, page, page_size)
+        result = await list_post_service(db, search, tags, page, page_size)
         [print(post.tags) for post in result]
         return result
     except ValueError as e:

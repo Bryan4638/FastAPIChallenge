@@ -11,7 +11,9 @@ from modules.posts.use_cases.delete_post import DeletePost
 from modules.posts.use_cases.get_by_id_post import GetPostById
 from modules.posts.use_cases.get_tags_by_id import get_tags_by_id
 from modules.posts.use_cases.list_post import ListPosts
+from modules.posts.use_cases.list_tags import ListTags
 from modules.posts.use_cases.update_post import UpdatePost
+from modules.posts.dto.tag_response_dto import TagResponseDTO
 
 
 async def create_post_service(
@@ -105,11 +107,13 @@ async def get_post_by_id_service(
 
 async def list_post_service(
     db: AsyncSession,
-    page: int ,
+    search: Optional[str],
+    tags: Optional[List[str]] ,
+    page: int,
     page_size: int
 ) -> Optional[List[PostResponseDTO]]:
 
-    posts = await ListPosts.list_posts(db, page, page_size)
+    posts = await ListPosts.list_posts(db, search, tags, page, page_size)
 
     return [
         PostResponseDTO(
@@ -126,4 +130,18 @@ async def list_post_service(
     ]
 
 
-
+async def list_tags_service(
+    db: AsyncSession
+) -> List[TagResponseDTO]:
+    try:
+        tags = await ListTags.list_tags(db)
+        return [
+            TagResponseDTO(
+                id=tag.id,
+                name=tag.name,
+                created_at=tag.created_at
+            )
+            for tag in tags
+        ]
+    except ValueError as e:
+        raise ValueError(f"Error listing tags: {str(e)}")

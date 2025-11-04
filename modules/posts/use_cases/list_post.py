@@ -1,31 +1,47 @@
-from typing import List
+from typing import List, Optional
+
+from sqlalchemy import or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from modules.comment.dto.response_comment import ResponseCommentDTO
 from modules.posts.dto.post_response_dto import PostResponseDTO
-from modules.posts.model.model import PostModel
+from modules.posts.model.model import PostModel, TagModel
 
 
 class ListPosts:
     @staticmethod
     async def list_posts(
         db: AsyncSession,
+        search: Optional[str],
+        tags: Optional[List[str]] ,
         page: int = 1,
         page_size: int = 10
     ) -> List[PostResponseDTO]:
         try:
             skip = (page - 1) * page_size
 
-            stmt = (PostModel.
-                    get_active_stmt()
-                    .options(
+            stmt = PostModel.get_active_stmt()
+            
+            if search:
+                stmt = stmt.where(
+                    or_(
+                        PostModel.title.ilike(f"%{search}%"),
+                        PostModel.content.ilike(f"%{search}%")
+                    )
+                )
+
+            if tags:
+                stmt = stmt.join(PostModel.tags).filter(TagModel.name.in_(tags))
+            
+            stmt = (stmt.options(
                         selectinload(PostModel.tags),
                         selectinload(PostModel.comments)
                     )
                     .offset(skip)
                     .limit(page_size)
-                    .order_by(PostModel.created_at.desc()))
+                    .order_by(PostModel.created_at.desc())
+                    .distinct())
 
             result = await db.execute(stmt)
             posts = result.scalars().all()
