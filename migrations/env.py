@@ -13,6 +13,7 @@ from core.database import Base
 from modules.posts.model.model import PostModel
 from modules.posts.model.model import TagModel
 from modules.auth.model.model import UserModel
+from modules.comment.model.model import CommentModel
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 

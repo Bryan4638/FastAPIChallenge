@@ -13,8 +13,7 @@ class CommentModel(SoftDeleteMixin, TimestampMixin, Base):
     content = Column(Text, nullable=False)
 
     author_id = Column(PG_UUID(as_uuid=True), ForeignKey('user.id'), nullable=False)
-    post_id = Column(PG_UUID(as_uuid=True), ForeignKey('post.id'), nullable=False)
+    post_id = Column(PG_UUID(as_uuid=True), ForeignKey('posts.id'), nullable=False)
 
     def __repr__(self):
         return f"<Comment ({self.content})>"
-

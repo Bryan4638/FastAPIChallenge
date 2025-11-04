@@ -8,7 +8,7 @@ class SoftDeleteMixin:
 
     def soft_delete(self):
         self.is_deleted = True
-        self.deleted_at = datetime.utcnow()
+        self.deleted_at = datetime.now()
 
     def restore(self):
         self.is_deleted = False

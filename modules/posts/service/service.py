@@ -24,6 +24,7 @@ async def create_post_service(
     return PostResponseDTO(
         id=post.id,
         title=post.title,
+        author_id=post.author_id,
         content=post.content,
         tags=post.tags,
         created_at=post.created_at,
@@ -45,6 +46,7 @@ async def update_post_service(
     return PostResponseDTO(
         id=post.id,
         title=post.title,
+        author_id=post.author_id,
         content=post.content,
         tags=post.tags,
         created_at=post.created_at,
@@ -75,6 +77,7 @@ async def get_post_by_id_service(
     return PostResponseDTO(
         id=post.id,
         title=post.title,
+        author_id=post.author_id,
         content=post.content,
         tags=post.tags,
         created_at=post.created_at,
@@ -83,21 +86,22 @@ async def get_post_by_id_service(
 
 async def list_post_service(
     db: AsyncSession,
-    user_id: UUID,
     page: int ,
     page_size: int
 ) -> Optional[List[PostResponseDTO]]:
 
-    posts = await ListPosts.list_posts(db, user_id, page, page_size)
+    posts = await ListPosts.list_posts(db, page, page_size)
 
     return [
         PostResponseDTO(
             id=post.id,
             title=post.title,
+            author_id=post.author_id,
             content=post.content,
             created_at=post.created_at,
+            updated_at=post.updated_at,
             tags=post.tags,
-            updated_at=post.updated_at
+            comments=post.comments
         )
         for post in posts
     ]

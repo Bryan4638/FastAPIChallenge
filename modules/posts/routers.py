@@ -1,4 +1,4 @@
-from typing import Annotated, List, Optional
+from typing import Annotated, Optional
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -39,7 +39,7 @@ async def get_posts(
 ):
     try:
 
-        result = await list_post_service(db, user.get("user_id"), page, page_size)
+        result = await list_post_service(db, page, page_size)
         [print(post.tags) for post in result]
         return result
     except ValueError as e:

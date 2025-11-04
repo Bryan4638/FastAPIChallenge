@@ -26,6 +26,7 @@ class PostModel(SoftDeleteMixin, TimestampMixin, Base):
     author_id = Column(PG_UUID(as_uuid=True), ForeignKey('user.id'), nullable=False)
 
     tags = relationship("TagModel", secondary=post_tags, back_populates="posts")
+    comments = relationship("CommentModel", backref="post", lazy="selectin")
 
     def __repr__(self):
         return f"<Post {self.title}>"
