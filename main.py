@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
+
+from core.middleware import timing_middleware
 from modules.auth.routers import router as auth_router
 from modules.posts.routers import router as post_router
 from modules.comment.routes import router as comment_router
@@ -22,11 +24,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.middleware("http")(timing_middleware)
+
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(post_router)
 app.include_router(comment_router)
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
