@@ -19,7 +19,6 @@ class UpdateComment:
         comment: CommentModel,
         update_data: RequestCommentDTO
     ) -> Optional[CommentModel]:
-
         try:
 
             update_values = {}
@@ -30,7 +29,7 @@ class UpdateComment:
                 update_values['post_id'] = update_data.post_id
 
             if not update_values:
-                return None
+                raise ValueError("No fields to update")
 
             await db.execute(
                 update(CommentModel)

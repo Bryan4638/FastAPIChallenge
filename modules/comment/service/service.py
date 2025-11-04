@@ -38,11 +38,9 @@ async def update_comment_service(
     comment = await FindCommentById.find_by_id(db, comment_id)
 
     if not comment:
-        return None
+        raise ValueError("Comment not found")
 
     if str(user_id) != str(comment.author_id):
-        print("User id ----->", user_id)
-        print("Comment author id ----->", comment.author_id)
         raise ValueError(f"User {user_id} is not the author of comment {comment_id}")
 
     comment_update = await UpdateComment.update_comment(db, comment_id, user_id, comment ,update_data)

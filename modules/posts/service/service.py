@@ -23,6 +23,9 @@ async def create_post_service(
 ) -> Optional[PostResponseDTO]:
     tags = await get_tags_by_id(db, post_data.tag_ids)
 
+    if not tags:
+        raise ValueError("Tags not found")
+
     post = await CreatePost.create_post(db, post_data, user_id, tags)
 
     return PostResponseDTO(
@@ -44,6 +47,9 @@ async def update_post_service(
     post = await GetPostById.get_post_by_id(db, post_id)
 
     tags = await get_tags_by_id(db, update_data.tag_ids)
+
+    if not tags:
+        raise ValueError("Tags not found")
 
     if not post:
         return None

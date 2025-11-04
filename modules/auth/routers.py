@@ -20,7 +20,6 @@ router = APIRouter(
 
 
 @router.post("/register",
-    response_model=RegisterResponseDTO,
     status_code=status.HTTP_201_CREATED,
     summary="Register new user",
     description="Register new user"

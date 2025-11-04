@@ -10,7 +10,7 @@ class FindCommentById:
     @staticmethod
     async def find_by_id(db: AsyncSession, comment_id: UUID) -> Optional[CommentModel]:
         try:
-            stmt = (CommentModel.get_active_stmt().where((CommentModel.id == comment_id)))
+            stmt = (CommentModel.get_active_stmt().where(((CommentModel.id == comment_id) & (CommentModel.is_deleted == False))))
 
             result = await db.execute(stmt)
             comment = result.scalars().first()

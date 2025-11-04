@@ -26,7 +26,7 @@ class GetPostById:
             post = result.scalars().first()
 
             if not post:
-                return None
+                raise ValueError("Post not found")
                 
             return post
             

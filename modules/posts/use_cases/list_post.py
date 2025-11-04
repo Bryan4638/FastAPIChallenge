@@ -62,7 +62,7 @@ class ListPosts:
                             post_id=comment.post_id,
                             created_at=comment.created_at,
                             author_id=comment.author_id
-                        ) for comment in post.comments
+                        ) for comment in post.comments if not comment.is_deleted
                     ]
                 )
                 for post in posts
