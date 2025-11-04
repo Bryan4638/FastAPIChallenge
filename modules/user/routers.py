@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from core.config import settings
 from core.database import get_session
 from core.security import decode_token
+from modules.user.dto.delete_response_dto import DeleteResponseDTO
 
 from modules.user.dto.update_user_dto import UpdateUserDTO
 from modules.user.dto.user_response_dto import UserResponseDTO
@@ -39,6 +40,7 @@ async def update_user(
 
 
 @router.delete("/{user_id}",
+    response_model=DeleteResponseDTO,
     status_code=status.HTTP_201_CREATED,
     summary="Delete user",
     description="Delete user authenticated"

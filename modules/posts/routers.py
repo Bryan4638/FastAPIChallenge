@@ -9,8 +9,17 @@ from core.database import get_session
 from core.security import decode_token
 from modules.posts.dto.create_post_dto import CreatePostDTO
 from modules.posts.dto.post_response_dto import PostResponseDTO
+from modules.posts.dto.tag_response_dto import TagResponseDTO
 from modules.posts.dto.update_post import UpdatePostDTO
-from modules.posts.service.service import (create_post_service, update_post_service, delete_post_service, list_post_service, get_post_by_id_service, list_tags_service)
+from modules.posts.service.service import (
+    create_post_service,
+    update_post_service,
+    delete_post_service,
+    list_post_service,
+    get_post_by_id_service,
+    list_tags_service
+)
+from modules.user.dto.delete_response_dto import DeleteResponseDTO
 
 # Router
 router = APIRouter(
@@ -20,6 +29,7 @@ router = APIRouter(
 )
 
 @router.get("/tags",
+    response_model=List[TagResponseDTO],
     status_code=status.HTTP_201_CREATED,
     summary="List tags",
     description="List a tags for the authenticated user"
@@ -35,6 +45,7 @@ async def get_tags(
 
 
 @router.get("/",
+    response_model=List[PostResponseDTO],
     status_code=status.HTTP_201_CREATED,
     summary="List post",
     description="List a post for the authenticated user"
@@ -49,7 +60,6 @@ async def get_posts(
 ):
     try:
         result = await list_post_service(db, search, tags, page, page_size)
-        [print(post.tags) for post in result]
         return result
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
@@ -110,6 +120,7 @@ async def update_post(
 
 
 @router.delete("/{post_id}",
+    response_model=DeleteResponseDTO,
     status_code=status.HTTP_201_CREATED,
     summary="Delete post",
     description="Delete a post for the authenticated user"

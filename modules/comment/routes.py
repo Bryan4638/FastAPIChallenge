@@ -10,6 +10,7 @@ from core.security import decode_token
 from modules.comment.dto.request_comment_dto import RequestCommentDTO
 from modules.comment.dto.response_comment import ResponseCommentDTO
 from modules.comment.service.service import create_comment_service, update_comment_service, delete_comment_service
+from modules.user.dto.delete_response_dto import DeleteResponseDTO
 
 # Router
 router = APIRouter(
@@ -58,6 +59,7 @@ async def update_comment(
 
 
 @router.delete("/{comment_id}",
+    response_model=DeleteResponseDTO,
     status_code=status.HTTP_201_CREATED,
     summary="Delete comment",
     description="Delete a comment for the authenticated user"
