@@ -41,21 +41,47 @@
 
 4. **Configurar variables de entorno**
    ```bash
-   cp ..env.example .env
+   cp .env.example .env
    # Editar el archivo .env con tus credenciales
    ```
 
-5. **Ejecutar migraciones**
+5. **Ejecutar con Docker Compose (Recomendado)**
    ```bash
-   alembic upgrade head
+   # Construir y ejecutar los contenedores
+   docker-compose up --build
+   
+   # Para ejecutar en segundo plano:
+   docker-compose up -d
+   
+   # Para detener los contenedores:
+   docker-compose down
    ```
+   **Para ejecutar con docker-compose es necesario cambiar esta liena en el archivo alembic.ini**
+    ```bash
+   # Deberías tener esta 
+   sqlalchemy.url = postgresql://postgres:postgres@localhost/challenge_db
+   
+   # Reemplazala por esta 
+   sqlalchemy.url = postgresql://postgres:postgres@db/challenge_db
+   
+   # Para poder ejecutar las migraciones con alembic
+   ```
+   
+   > **Nota:** Con Docker Compose no necesitas ejecutar migraciones ni seed_tags manualmente, ya que se ejecutan automáticamente al iniciar el contenedor.
 
-6. **Iniciar el servidor**
+6. **Opcional: Ejecutar sin Docker**
    ```bash
+   # Ejecutar migraciones
+   alembic upgrade head
+   
+   # Ejecutar para poner Tags de prueba
+   python -m scripts.seed_tags
+   
+   # Iniciar el servidor
    uvicorn main:app --reload
    ```
 
-7. **Documentación de la API**
+8. **Documentación de la API**
    - Swagger UI: http://localhost:8000/docs
    - ReDoc: http://localhost:8000/redoc
 
